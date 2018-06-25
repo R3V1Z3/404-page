@@ -47,6 +47,7 @@
     get_files( urls ) {
         if ( urls.length < 1 ) return;
         const url = urls.shift();
+		console.log(url, urls);
         /* PROMISE CHAIN */
         this.get(url).then( (response ) => {
             console.log(`URL successfully loaded: ${url}`);
