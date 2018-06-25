@@ -29,15 +29,8 @@
         this.init(extensions);
     }
 
-	log(msg) {
-		console.log(msg);
-	}
-
 	init(extensions) {
-		this.log(extensions);
-		this.log(this.file);
 		const urls = this.prepare_urls(extensions);
-		this.log(urls);
 		this.get_files(urls);
 	}
 
@@ -56,11 +49,11 @@
         const url = urls.shift();
         /* PROMISE CHAIN */
         this.get(url).then( (response ) => {
-            this.log(`URL successfully loaded: ${url}`);
+            console.log(`URL successfully loaded: ${url}`);
 			// we'll now redirect
 			location.href = url;
         }).catch( function(error) {
-            this.log(error);
+            console.log(error);
 			// continue checking for urls
             this.get_files( urls );
         })
