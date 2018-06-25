@@ -25,7 +25,7 @@
     
     constructor(folder, extensions) {
 		this.folder = folder;
-		this.path = location.pathname;
+		this.file = window.location.pathname.split('/').pop();
         this.init(extensions);
     }
 
@@ -35,7 +35,7 @@
 
 	init(extensions) {
 		this.log(extensions);
-		this.log(this.path);
+		this.log(this.file);
 		const urls = this.prepare_urls(extensions);
 		this.log(urls);
 		this.get_files(urls);
@@ -45,7 +45,7 @@
     prepare_urls(extensions) {
         var urls = [];
 		extensions.forEach(e => {
-			urls.push(`${this.folder}${this.path}.${e}`);
+			urls.push(`${this.folder}/${this.file}.${e}`);
 		});
         return urls;
     }
