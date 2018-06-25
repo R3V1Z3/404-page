@@ -13,7 +13,94 @@
 	<p>Sorry, this page doesn't appear to exist yet.</p>
 </section>
 
-<script src="js/redirect.js"></script>
+<script>
+
+/**
+ * Redirect
+ * @param {string} el HTML element
+ * @param {object} options options object
+ * @returns {object} a new GitDown object
+ */
+ class Redirect {
+    
+    constructor(extensions) {
+        const R = this;
+		R.path = location.pathname;
+        R.init(extensions);
+    }
+
+	log(msg) {
+		console.log(msg);
+	}
+
+	init(extensions) {
+		R.log(extensions);
+		R.log(R.path);
+		const urls = R.prepare_urls(extensions);
+		R.log(urls);
+		R.get_files(urls);
+	}
+
+	// directs the loading process, preparing a list of urls to be used in promise chain
+    prepare_urls(extensions) {
+        var urls = [];
+		extensions.forEach(e => {
+			urls.push(`${R.path}.${e}`);
+		});
+        return urls;
+    }
+
+    // takes a series of urls and tries them until one loads succesfully
+    get_files( urls ) {
+        if ( urls.length < 1 ) return;
+        const url = urls.shift();
+        /* PROMISE CHAIN */
+        R.get(url).then( (response ) => {
+            R.log(`URL successfully loaded: ${url}`);
+			// we'll now redirect
+			location.href = url;
+        }).catch( function(error) {
+            R.log(error);
+			// continue checking for urls
+            R.get_files( urls );
+        })
+    };
+
+    // promise based get
+    get(url) {
+        return new Promise( function (resolve, reject) {
+            const http = new XMLHttpRequest();
+            http.open('GET', url);
+            http.onload = function () {
+                if ( http.status === 200 ) {
+                    resolve(http.response);
+                } else {
+                    reject( Error(http.status) );
+                }
+            };
+            http.onerror = function () {
+                reject( Error("Error with request.") );
+            };
+            http.send();
+        });
+    }
+
+    /**
+     * Helper function for re-combining url parts
+     * @returns {string} url with base, query vars and hash
+     */
+	uri() {
+        let q = this.params.toString();
+        if ( q.length > 0 ) q = '?' + q;
+        let base = window.location.href.split('?')[0];
+        base = base.split('#')[0];
+        return base + q + location.hash;
+    };
+ }
+
+const re = new Redirect(['html', 'md']);
+
+</script>
 
 </body>
 </html>
