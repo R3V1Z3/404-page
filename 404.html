@@ -24,10 +24,9 @@
  class Redirect {
     
     constructor(folder, extensions) {
-		const RE = this;
-		RE.folder = folder;
-		RE.file = window.location.pathname.split('/').pop();
-        RE.init(extensions);
+		this.folder = folder;
+		this.file = window.location.pathname.split('/').pop();
+        this.init(extensions);
     }
 
 	init(extensions) {
@@ -38,6 +37,7 @@
 	// directs the loading process, preparing a list of urls to be used in promise chain
     prepare_urls(extensions) {
         var urls = [];
+		var RE = this;
 		extensions.forEach(e => {
 			urls.push(`${RE.folder}/${RE.file}.${e}`);
 		});
@@ -50,8 +50,9 @@
         const url = urls.shift();
 		console.log(url, urls);
         /* PROMISE CHAIN */
-		console.log(re);
-        RE.get(url).then( (response ) => {
+		var RE = this;
+		console.log(RE);
+        this.get(url).then( (response ) => {
             console.log(`URL successfully loaded: ${url}`);
 			// we'll now redirect
 			location.href = url;
@@ -81,18 +82,6 @@
             http.send();
         });
     }
-
-    /**
-     * Helper function for re-combining url parts
-     * @returns {string} url with base, query vars and hash
-     */
-	uri() {
-        let q = this.params.toString();
-        if ( q.length > 0 ) q = '?' + q;
-        let base = window.location.href.split('?')[0];
-        base = base.split('#')[0];
-        return base + q + location.hash;
-    };
  }
 
 const re = new Redirect( 'pages', ['html', 'md', 'asciidoc'] );
