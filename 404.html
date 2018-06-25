@@ -55,11 +55,10 @@
 				this.get(url).then((response) => {
 					console.log(`URL successfully loaded: ${url}`);
 					// we'll now redirect
-					const params = (new URL(location)).searchParams;
-					let q = this.params.toString();
+					let params = (new URL(location)).searchParams;
+					let q = params.toString();
 					if (q.length > 0) q = '?' + q;
-					console.log(params, q);
-					return;
+					console.log('HERE: ', params, q);
 					//location.href = url + q;
 				}).catch(function (error) {
 					// continue checking for urls
