@@ -17,14 +17,15 @@
 
 /**
  * Redirect
- * @param {string} el HTML element
- * @param {object} options options object
+ * @param {string} folder is a folder name where contents might exist
+ * @param {array} extensions contains all extensions to try
  * @returns {object} a new GitDown object
  */
  class Redirect {
     
-    constructor(extensions) {
+    constructor(folder, extensions) {
         const R = this;
+		R.folder = folder;
 		R.path = location.pathname;
         R.init(extensions);
     }
@@ -45,7 +46,7 @@
     prepare_urls(extensions) {
         var urls = [];
 		extensions.forEach(e => {
-			urls.push(`${R.path}.${e}`);
+			urls.push(`${R.folder}/${R.path}.${e}`);
 		});
         return urls;
     }
@@ -98,7 +99,7 @@
     };
  }
 
-const re = new Redirect(['html', 'md']);
+const re = new Redirect( 'pages', ['html', 'md', 'asciidoc'] );
 
 </script>
 
