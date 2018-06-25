@@ -58,8 +58,7 @@
 					let params = (new URL(location)).searchParams;
 					let q = params.toString();
 					if (q.length > 0) q = '?' + q;
-					console.log('HERE: ', params, q);
-					//location.href = url + q;
+					location.href = url + q;
 				}).catch(function (error) {
 					// continue checking for urls
 					RE.get_files(urls);
