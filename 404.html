@@ -1,92 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 </head>
+
 <body>
 
-<header>
-	<h1>404</h1>
-	<p>Page not found</p>
-</header>
+	<header>
+		<h1>404</h1>
+		<p>Page not found.</p>
+	</header>
 
-<section>
-	<p>Sorry, this page doesn't appear to exist yet.</p>
-</section>
+	<section>
+		<p>Sorry, this page doesn't appear to exist yet.</p>
+	</section>
 
-<script>
+	<script>
 
-/**
- * Redirect
- * @param {string} folder is a folder name where contents might exist
- * @param {array} extensions contains all extensions to try
- * @returns {object} a new GitDown object
- */
- class Redirect {
-    
-    constructor(folder, extensions) {
-		this.folder = folder;
-		this.file = window.location.pathname.split('/').pop();
-        this.init(extensions);
-    }
+		/**
+		 * Redirect
+		 * @param {string} folder is a folder name where contents might exist
+		 * @param {array} extensions contains all extensions to try
+		 * @returns {object} new object
+		 */
+		class Redirect {
 
-	init(extensions) {
-		const urls = this.prepare_urls(extensions);
-		this.get_files(urls);
-	}
+			constructor(folder, extensions) {
+				this.folder = folder;
+				this.file = window.location.pathname.split('/').pop();
+				this.init(extensions);
+			}
 
-	// directs the loading process, preparing a list of urls to be used in promise chain
-    prepare_urls(extensions) {
-        var urls = [];
-		var RE = this;
-		extensions.forEach(e => {
-			urls.push(`${RE.folder}/${RE.file}.${e}`);
-		});
-        return urls;
-    }
+			init(extensions) {
+				const urls = this.prepare_urls(extensions);
+				this.get_files(urls);
+			}
 
-    // takes a series of urls and tries them until one loads succesfully
-    get_files( urls ) {
-        if ( urls.length < 1 ) return;
-        const url = urls.shift();
-		console.log(url, urls);
-        /* PROMISE CHAIN */
-		var RE = this;
-		console.log(RE);
-        this.get(url).then( (response ) => {
-            console.log(`URL successfully loaded: ${url}`);
-			// we'll now redirect
-			location.href = url;
-        }).catch( function(error) {
-            console.log(error);
-			console.log(re);
-			// continue checking for urls
-            RE.get_files( urls );
-        })
-    };
+			// directs the loading process, preparing a list of urls to be used in promise chain
+			prepare_urls(extensions) {
+				var urls = [];
+				var RE = this;
+				extensions.forEach(e => {
+					urls.push(`${RE.folder}/${RE.file}.${e}`);
+				});
+				return urls;
+			}
 
-    // promise based get
-    get(url) {
-        return new Promise( function (resolve, reject) {
-            const http = new XMLHttpRequest();
-            http.open('GET', url);
-            http.onload = function () {
-                if ( http.status === 200 ) {
-                    resolve(http.response);
-                } else {
-                    reject( Error(http.status) );
-                }
-            };
-            http.onerror = function () {
-                reject( Error("Error with request.") );
-            };
-            http.send();
-        });
-    }
- }
+			// takes a series of urls and tries them until one loads succesfully
+			get_files(urls) {
+				if (urls.length < 1) return;
+				const url = urls.shift();
+				/* PROMISE CHAIN */
+				var RE = this;
+				this.get(url).then((response) => {
+					console.log(`URL successfully loaded: ${url}`);
+					// we'll now redirect
+					const params = (new URL(location)).searchParams;
+					let q = this.params.toString();
+					if (q.length > 0) q = '?' + q;
+					location.href = url + q;
+				}).catch(function (error) {
+					// continue checking for urls
+					RE.get_files(urls);
+				})
+			};
 
-const re = new Redirect( 'pages', ['html', 'md', 'asciidoc'] );
+			// promise based get
+			get(url) {
+				return new Promise(function (resolve, reject) {
+					const http = new XMLHttpRequest();
+					http.open('GET', url);
+					http.onload = function () {
+						if (http.status === 200) {
+							resolve(http.response);
+						} else {
+							reject(Error(http.status));
+						}
+					};
+					http.onerror = function () {
+						reject(Error("Error with request."));
+					};
+					http.send();
+				});
+			}
+		}
 
-</script>
+		const re = new Redirect('pages', ['html', 'md', 'asciidoc']);
+
+	</script>
 
 </body>
+
 </html>
