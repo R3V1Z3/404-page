@@ -45,7 +45,7 @@
     prepare_urls(extensions) {
         var urls = [];
 		extensions.forEach(e => {
-			urls.push(`${this.folder}/${this.path}.${e}`);
+			urls.push(`${this.folder}${this.path}.${e}`);
 		});
         return urls;
     }
