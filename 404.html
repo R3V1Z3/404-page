@@ -24,22 +24,22 @@
  class Redirect {
     
     constructor(folder, extensions) {
-		const re = this;
-		re.folder = folder;
-		re.file = window.location.pathname.split('/').pop();
-        re.init(extensions);
+		const RE = this;
+		RE.folder = folder;
+		RE.file = window.location.pathname.split('/').pop();
+        RE.init(extensions);
     }
 
 	init(extensions) {
-		const urls = re.prepare_urls(extensions);
-		re.get_files(urls);
+		const urls = this.prepare_urls(extensions);
+		this.get_files(urls);
 	}
 
 	// directs the loading process, preparing a list of urls to be used in promise chain
     prepare_urls(extensions) {
         var urls = [];
 		extensions.forEach(e => {
-			urls.push(`${re.folder}/${re.file}.${e}`);
+			urls.push(`${RE.folder}/${RE.file}.${e}`);
 		});
         return urls;
     }
@@ -51,7 +51,7 @@
 		console.log(url, urls);
         /* PROMISE CHAIN */
 		console.log(re);
-        re.get(url).then( (response ) => {
+        RE.get(url).then( (response ) => {
             console.log(`URL successfully loaded: ${url}`);
 			// we'll now redirect
 			location.href = url;
@@ -59,7 +59,7 @@
             console.log(error);
 			console.log(re);
 			// continue checking for urls
-            re.get_files( urls );
+            RE.get_files( urls );
         })
     };
 
