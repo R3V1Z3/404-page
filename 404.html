@@ -24,10 +24,9 @@
  class Redirect {
     
     constructor(folder, extensions) {
-        const R = this;
-		R.folder = folder;
-		R.path = location.pathname;
-        R.init(extensions);
+		this.folder = folder;
+		this.path = location.pathname;
+        this.init(extensions);
     }
 
 	log(msg) {
@@ -35,18 +34,18 @@
 	}
 
 	init(extensions) {
-		R.log(extensions);
-		R.log(R.path);
-		const urls = R.prepare_urls(extensions);
-		R.log(urls);
-		R.get_files(urls);
+		this.log(extensions);
+		this.log(this.path);
+		const urls = this.prepare_urls(extensions);
+		this.log(urls);
+		this.get_files(urls);
 	}
 
 	// directs the loading process, preparing a list of urls to be used in promise chain
     prepare_urls(extensions) {
         var urls = [];
 		extensions.forEach(e => {
-			urls.push(`${R.folder}/${R.path}.${e}`);
+			urls.push(`${this.folder}/${this.path}.${e}`);
 		});
         return urls;
     }
@@ -56,14 +55,14 @@
         if ( urls.length < 1 ) return;
         const url = urls.shift();
         /* PROMISE CHAIN */
-        R.get(url).then( (response ) => {
-            R.log(`URL successfully loaded: ${url}`);
+        this.get(url).then( (response ) => {
+            this.log(`URL successfully loaded: ${url}`);
 			// we'll now redirect
 			location.href = url;
         }).catch( function(error) {
-            R.log(error);
+            this.log(error);
 			// continue checking for urls
-            R.get_files( urls );
+            this.get_files( urls );
         })
     };
 
