@@ -24,6 +24,7 @@
  class Redirect {
     
     constructor(folder, extensions) {
+		const redirect = this;
 		this.folder = folder;
 		this.file = window.location.pathname.split('/').pop();
         this.init(extensions);
@@ -56,7 +57,7 @@
         }).catch( function(error) {
             console.log(error);
 			// continue checking for urls
-            this.get_files( urls );
+            redirect.get_files( urls );
         })
     };
 
